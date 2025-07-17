@@ -37,7 +37,7 @@ const products = [
 export default function HomePage() {
   const whatsappNumber = "+254700000000" // Replace with actual WhatsApp number
   const whatsappMessage = "Hi! I'm interested in your tote bags from The Tote Bag Boutique."
-  const whatsappUrl = `https://wa.me/${whatsappNumber}?text=${encodeURIComponent(whatsappMessage)}`
+  const whatsappUrl = `https://wa.me/${254718963886}?text=${encodeURIComponent(whatsappMessage)}`
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-rose-50 to-pink-50">

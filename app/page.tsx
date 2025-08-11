@@ -270,7 +270,6 @@ export default function HomePage() {
   const [products, setProducts] = useState<Product[]>([])
   const [loading, setLoading] = useState(true)
   const [isVideoPlaying, setIsVideoPlaying] = useState(true)
-  const [currentSlide, setCurrentSlide] = useState(0)
 
   const whatsappNumbers = ["+254753323940", "0718963886"]
 
@@ -329,80 +328,6 @@ Is this bag still available? I would like to know more details about it.`
     }
   }
 
-  // Carousel navigation functions
-  const goToSlide = (slideIndex: number) => {
-    setCurrentSlide(slideIndex)
-    const carousel = document.getElementById('bag-carousel')
-    if (carousel) {
-      const cardWidth = window.innerWidth < 640 ? 100 : window.innerWidth < 768 ? 50 : window.innerWidth < 1024 ? 33.333 : 25
-      const translate = -(slideIndex * cardWidth)
-      carousel.style.transform = `translateX(${translate}%)`
-    }
-  }
-
-  const nextSlide = () => {
-    const maxSlides = Math.ceil(availableProducts.slice(0, 8).length / (window.innerWidth < 640 ? 1 : window.innerWidth < 768 ? 2 : window.innerWidth < 1024 ? 3 : 4))
-    const next = Math.min(currentSlide + 1, maxSlides - 1)
-    goToSlide(next)
-  }
-
-  const prevSlide = () => {
-    const prev = Math.max(currentSlide - 1, 0)
-    goToSlide(prev)
-  }
-
-  // Touch/swipe functionality
-  useEffect(() => {
-    const carousel = document.getElementById('bag-carousel')
-    if (!carousel) return
-
-    let startX = 0
-    let currentX = 0
-    let isDragging = false
-
-    const handleTouchStart = (e: TouchEvent) => {
-      startX = e.touches[0].clientX
-      isDragging = true
-    }
-
-    const handleTouchMove = (e: TouchEvent) => {
-      if (!isDragging) return
-      currentX = e.touches[0].clientX
-      const diff = currentX - startX
-      const cardWidth = window.innerWidth < 640 ? 100 : window.innerWidth < 768 ? 50 : window.innerWidth < 1024 ? 33.333 : 25
-      const currentTranslate = -(currentSlide * cardWidth)
-      const newTranslate = currentTranslate + (diff / window.innerWidth) * cardWidth
-      carousel.style.transform = `translateX(${newTranslate}%)`
-    }
-
-    const handleTouchEnd = () => {
-      if (!isDragging) return
-      isDragging = false
-      const diff = currentX - startX
-      const threshold = 50
-
-      if (Math.abs(diff) > threshold) {
-        if (diff > 0) {
-          prevSlide()
-        } else {
-          nextSlide()
-        }
-      } else {
-        goToSlide(currentSlide)
-      }
-    }
-
-    carousel.addEventListener('touchstart', handleTouchStart)
-    carousel.addEventListener('touchmove', handleTouchMove)
-    carousel.addEventListener('touchend', handleTouchEnd)
-
-    return () => {
-      carousel.removeEventListener('touchstart', handleTouchStart)
-      carousel.removeEventListener('touchmove', handleTouchMove)
-      carousel.removeEventListener('touchend', handleTouchEnd)
-    }
-  }, [currentSlide])
-
   // Filter only available products for display
   const availableProducts = products.filter((product) => !product.isSold)
 
@@ -421,24 +346,24 @@ Is this bag still available? I would like to know more details about it.`
     <div className="min-h-screen bg-gradient-to-br from-rose-50 via-pink-50 to-purple-50">
       {/* Header */}
       <header className="bg-white/90 backdrop-blur-md border-b border-rose-100 sticky top-0 z-50 shadow-sm">
-        <div className="container mx-auto px-3 sm:px-4 py-2 sm:py-3 lg:py-4">
-          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 sm:gap-3 lg:gap-4">
-            <div className="flex items-center space-x-2 sm:space-x-3">
+        <div className="container mx-auto px-4 py-3 sm:py-4">
+          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 sm:gap-4">
+            <div className="flex items-center space-x-3">
               <div className="relative">
                 <Image
                   src="/logo.jpg"
                   alt="The Bag Boutique Logo"
-                  width={40}
-                  height={40}
-                  className="w-10 h-10 sm:w-12 sm:h-12 lg:w-[60px] lg:h-[60px] rounded-full shadow-lg ring-2 ring-rose-200 floating-island"
+                  width={50}
+                  height={50}
+                  className="sm:w-[60px] sm:h-[60px] rounded-full shadow-lg ring-2 ring-rose-200"
                 />
-                <div className="absolute -top-1 -right-1 w-2 h-2 sm:w-3 sm:h-3 lg:w-4 lg:h-4 bg-green-500 rounded-full border-2 border-white"></div>
+                <div className="absolute -top-1 -right-1 w-3 h-3 sm:w-4 sm:h-4 bg-green-500 rounded-full border-2 border-white"></div>
               </div>
               <div>
-                <h1 className="text-responsive-lg sm:text-responsive-xl lg:text-responsive-2xl font-bold bg-gradient-to-r from-rose-600 to-pink-600 bg-clip-text text-transparent">
+                <h1 className="text-lg sm:text-xl md:text-2xl font-bold bg-gradient-to-r from-rose-600 to-pink-600 bg-clip-text text-transparent">
                   The Bag Boutique
                 </h1>
-                <p className="text-responsive-xs sm:text-responsive-sm text-gray-600 font-medium">Premium bags for every occasion</p>
+                <p className="text-xs sm:text-sm text-gray-600 font-medium">Premium bags for every occasion</p>
               </div>
             </div>
 
@@ -457,10 +382,10 @@ Is this bag still available? I would like to know more details about it.`
               <div className="flex items-center gap-2">
                 <Button
                   asChild
-                  className="bg-gradient-to-r from-green-500 to-green-600 hover:from-green-600 hover:to-green-700 text-white shadow-xl border-0 font-bold transition-all duration-200 transform hover:scale-105 text-responsive-xs sm:text-responsive-sm lg:text-responsive-base px-3 sm:px-4 lg:px-6 py-2 sm:py-3"
+                  className="bg-gradient-to-r from-green-500 to-green-600 hover:from-green-600 hover:to-green-700 text-white shadow-xl border-0 font-bold transition-all duration-200 transform hover:scale-105 text-sm sm:text-base px-4 sm:px-6 py-2 sm:py-3"
                 >
                   <Link href={createWhatsappUrl()} target="_blank" rel="noopener noreferrer">
-                    <MessageCircle className="w-3 h-3 sm:w-4 sm:h-4 mr-1 sm:mr-2" />
+                    <MessageCircle className="w-4 h-4 mr-2" />
                     <span className="hidden sm:inline">WhatsApp Us</span>
                     <span className="sm:hidden">WhatsApp</span>
                   </Link>
@@ -472,7 +397,7 @@ Is this bag still available? I would like to know more details about it.`
       </header>
 
       {/* Video Showcase Section */}
-      <section className="relative h-[40vh] sm:h-[50vh] md:h-[60vh] lg:h-[70vh] overflow-hidden">
+      <section className="relative h-[50vh] sm:h-[60vh] lg:h-[70vh] overflow-hidden">
         <video
           id="showcase-video"
           className="absolute inset-0 w-full h-full object-cover"
@@ -490,31 +415,31 @@ Is this bag still available? I would like to know more details about it.`
 
         {/* Video Content */}
         <div className="absolute inset-0 flex items-center justify-center text-center text-white z-10">
-          <div className="max-w-4xl mx-auto px-3 sm:px-4 lg:px-6">
-            <div className="inline-flex items-center gap-2 bg-white/20 backdrop-blur-sm px-3 sm:px-4 py-2 rounded-full text-responsive-xs sm:text-responsive-sm font-medium mb-4 sm:mb-6 shadow-lg">
-              <Sparkles className="w-3 h-3 sm:w-4 sm:h-4" />
+          <div className="max-w-4xl mx-auto px-4">
+            <div className="inline-flex items-center gap-2 bg-white/20 backdrop-blur-sm px-4 py-2 rounded-full text-sm font-medium mb-6 shadow-lg">
+              <Sparkles className="w-4 h-4" />
               Watch Our Collection in Action
             </div>
 
-            <h2 className="text-responsive-2xl sm:text-responsive-4xl lg:text-responsive-6xl font-bold mb-4 sm:mb-6 leading-tight">
+            <h2 className="text-2xl sm:text-4xl lg:text-6xl font-bold mb-6 leading-tight">
               Discover Your Perfect
               <span className="block bg-gradient-to-r from-rose-300 to-pink-300 bg-clip-text text-transparent">
                 Bag Collection
               </span>
             </h2>
 
-            <p className="text-responsive-base sm:text-responsive-lg lg:text-responsive-xl mb-6 sm:mb-8 max-w-2xl mx-auto leading-relaxed opacity-90">
+            <p className="text-lg lg:text-xl mb-8 max-w-2xl mx-auto leading-relaxed opacity-90">
               Premium quality bags crafted for style, comfort, and durability. See our collection come to life.
             </p>
 
-            <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center">
+            <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <Button
                 asChild
                 size="lg"
-                className="bg-gradient-to-r from-green-500 to-green-600 hover:from-green-600 hover:to-green-700 text-white px-6 sm:px-8 py-3 sm:py-4 text-responsive-base sm:text-responsive-lg shadow-xl transition-all duration-200 transform hover:scale-105 font-bold"
+                className="bg-gradient-to-r from-green-500 to-green-600 hover:from-green-600 hover:to-green-700 text-white px-8 py-4 text-lg shadow-xl transition-all duration-200 transform hover:scale-105 font-bold"
               >
                 <Link href={createWhatsappUrl()} target="_blank" rel="noopener noreferrer">
-                  <MessageCircle className="w-4 h-4 sm:w-5 sm:h-5 mr-2" />
+                  <MessageCircle className="w-5 h-5 mr-2" />
                   Order Now on WhatsApp
                 </Link>
               </Button>
@@ -523,9 +448,9 @@ Is this bag still available? I would like to know more details about it.`
                 onClick={toggleVideo}
                 size="lg"
                 variant="outline"
-                className="border-2 border-white text-white hover:bg-white hover:text-gray-900 px-6 sm:px-8 py-3 sm:py-4 text-responsive-base sm:text-responsive-lg bg-white/10 backdrop-blur-sm shadow-xl font-semibold transition-all duration-200 transform hover:scale-105"
+                className="border-2 border-white text-white hover:bg-white hover:text-gray-900 px-8 py-4 text-lg bg-white/10 backdrop-blur-sm shadow-xl font-semibold transition-all duration-200 transform hover:scale-105"
               >
-                {isVideoPlaying ? <Pause className="w-4 h-4 sm:w-5 sm:h-5 mr-2" /> : <Play className="w-4 h-4 sm:w-5 sm:h-5 mr-2" />}
+                {isVideoPlaying ? <Pause className="w-5 h-5 mr-2" /> : <Play className="w-5 h-5 mr-2" />}
                 {isVideoPlaying ? "Pause Video" : "Play Video"}
               </Button>
             </div>
@@ -533,154 +458,31 @@ Is this bag still available? I would like to know more details about it.`
         </div>
       </section>
 
-      {/* Floating Island Swipeable Bag Showcase */}
-      <section className="py-8 sm:py-12 lg:py-16 relative overflow-hidden">
-        <div className="absolute inset-0 bg-gradient-to-br from-rose-50/50 via-pink-50/50 to-purple-50/50"></div>
-        <div className="container mx-auto px-3 sm:px-4 lg:px-6 relative">
-          <div className="text-center mb-8 sm:mb-12">
-            <h3 className="text-responsive-xl sm:text-responsive-2xl lg:text-responsive-3xl font-bold text-gray-900 mb-3 sm:mb-4">
-              Swipe Through Our Floating Collection
-            </h3>
-            <p className="text-responsive-base sm:text-responsive-lg text-gray-600 max-w-2xl mx-auto leading-relaxed">
-              Explore our beautiful bags with a magical floating experience. Swipe left or right to discover more.
-            </p>
-          </div>
-
-          {/* Swipeable Carousel */}
-          <div className="relative max-w-6xl mx-auto">
-            <div className="overflow-hidden">
-                             <div className="flex carousel-transition" id="bag-carousel">
-                {availableProducts.slice(0, 8).map((product, index) => (
-                  <div
-                    key={product.id}
-                    className="flex-shrink-0 w-full sm:w-1/2 md:w-1/3 lg:w-1/4 px-2 sm:px-3 lg:px-4"
-                  >
-                                         <Card className={`group hover:shadow-2xl transition-all duration-500 transform hover:-translate-y-4 border-0 bg-white/90 backdrop-blur-sm overflow-hidden glow-effect-carousel h-full ${
-                       index % 4 === 0 ? 'floating-island-carousel' : 
-                       index % 4 === 1 ? 'floating-island-carousel-delay-1' : 
-                       index % 4 === 2 ? 'floating-island-carousel-delay-2' : 'floating-island-carousel-delay-3'
-                     }`}>
-                      <CardContent className="p-0 h-full flex flex-col">
-                        <div className="aspect-square overflow-hidden bg-gray-100 relative flex-1">
-                          <Image
-                            src={product.image || "/placeholder.svg"}
-                            alt={product.name}
-                            width={400}
-                            height={400}
-                            className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
-                          />
-                          <div className="absolute inset-0 bg-gradient-to-t from-black/30 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
-                          <Badge className="absolute top-2 right-2 bg-green-500 text-white shadow-lg text-responsive-xs">
-                            Available
-                          </Badge>
-                          <Badge className="absolute top-2 left-2 bg-blue-500 text-white shadow-lg text-responsive-xs">
-                            ID: {product.id}
-                          </Badge>
-                          <div className="absolute bottom-2 left-2 right-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                            <div className="bg-white/90 backdrop-blur-sm rounded-lg p-2 text-center">
-                              <p className="text-responsive-xs font-medium text-gray-800">Swipe to see more</p>
-                            </div>
-                          </div>
-                        </div>
-                        <div className="p-3 sm:p-4 text-center flex-shrink-0">
-                          <h4 className="font-bold text-gray-900 mb-1 text-responsive-sm sm:text-responsive-base line-clamp-1">
-                            {product.name}
-                          </h4>
-                          <p className="text-responsive-xs text-gray-600 mb-1 font-medium">{product.category}</p>
-                          <p className="font-bold text-rose-600 mb-3 text-responsive-sm sm:text-responsive-base lg:text-responsive-lg">{product.price}</p>
-                          <Button
-                            asChild
-                            size="sm"
-                            className="w-full bg-gradient-to-r from-green-500 to-green-600 hover:from-green-600 hover:to-green-700 text-white shadow-lg transition-all duration-200 transform hover:scale-105 text-responsive-xs sm:text-responsive-sm font-bold"
-                          >
-                            <Link
-                              href={createWhatsappUrl(product.name, product.id, product.price)}
-                              target="_blank"
-                              rel="noopener noreferrer"
-                            >
-                              <MessageCircle className="w-3 h-3 sm:w-4 sm:h-4 mr-1" />
-                              <span className="hidden sm:inline">Order This Bag</span>
-                              <span className="sm:hidden">Order</span>
-                            </Link>
-                          </Button>
-                        </div>
-                      </CardContent>
-                    </Card>
-                  </div>
-                ))}
-              </div>
-            </div>
-
-            {/* Navigation Arrows */}
-            <button
-              onClick={prevSlide}
-              className="absolute left-2 sm:left-4 top-1/2 -translate-y-1/2 bg-white/80 backdrop-blur-sm hover:bg-white text-gray-800 p-2 sm:p-3 rounded-full shadow-lg transition-all duration-200 transform hover:scale-110 z-10"
-            >
-              <svg className="w-4 h-4 sm:w-6 sm:h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
-              </svg>
-            </button>
-
-            <button
-              onClick={nextSlide}
-              className="absolute right-2 sm:right-4 top-1/2 -translate-y-1/2 bg-white/80 backdrop-blur-sm hover:bg-white text-gray-800 p-2 sm:p-3 rounded-full shadow-lg transition-all duration-200 transform hover:scale-110 z-10"
-            >
-              <svg className="w-4 h-4 sm:w-6 sm:h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-              </svg>
-            </button>
-
-            {/* Swipe Indicators */}
-            <div className="flex justify-center mt-6 sm:mt-8 space-x-2">
-              {[0, 1, 2, 3].map((dot) => (
-                <button
-                  key={dot}
-                  onClick={() => goToSlide(dot)}
-                  className={`w-2 h-2 sm:w-3 sm:h-3 rounded-full transition-all duration-200 hover:bg-rose-500 ${
-                    currentSlide === dot ? 'bg-rose-500' : 'bg-rose-300'
-                  }`}
-                ></button>
-              ))}
-            </div>
-          </div>
-
-          {/* Swipe Instructions */}
-          <div className="text-center mt-6 sm:mt-8">
-            <div className="inline-flex items-center gap-2 bg-white/60 backdrop-blur-sm px-4 py-2 rounded-full text-responsive-xs sm:text-responsive-sm text-gray-600 shadow-sm">
-              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 16V4m0 0L3 8m4-4l4 4m6 0v12m0 0l4-4m-4 4l-4-4" />
-              </svg>
-              <span>Swipe or use arrows to explore</span>
-            </div>
-          </div>
-        </div>
-      </section>
-
       {/* Hero Section */}
-      <section className="py-6 sm:py-8 lg:py-12 xl:py-16 relative overflow-hidden">
+      <section className="py-8 sm:py-12 lg:py-16 relative overflow-hidden">
         <div className="absolute inset-0 bg-gradient-to-r from-rose-100/50 to-pink-100/50"></div>
-        <div className="container mx-auto px-3 sm:px-4 lg:px-6 text-center relative">
+        <div className="container mx-auto px-4 text-center relative">
           <div className="max-w-4xl mx-auto">
-            <h3 className="text-responsive-xl sm:text-responsive-2xl lg:text-responsive-3xl xl:text-responsive-4xl font-bold text-gray-900 mb-3 sm:mb-4 leading-tight">
+            <h3 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-gray-900 mb-4 leading-tight">
               Elegant Bags for Every Occasion
             </h3>
 
-            <p className="text-responsive-base sm:text-responsive-lg lg:text-responsive-xl text-gray-600 mb-4 sm:mb-6 max-w-2xl mx-auto leading-relaxed">
+            <p className="text-base sm:text-lg lg:text-xl text-gray-600 mb-6 max-w-2xl mx-auto leading-relaxed">
               Discover our curated collection of premium bags that blend style, functionality, and elegance.
             </p>
 
-            <div className="flex items-center justify-center gap-2 text-gray-600 mb-4 sm:mb-6 bg-white/60 backdrop-blur-sm px-3 sm:px-4 py-2 rounded-full inline-flex shadow-sm">
-              <MapPin className="h-3 w-3 sm:h-4 sm:w-4 text-rose-500" />
-              <span className="text-responsive-xs sm:text-responsive-sm">Located in Nakuru, near Egerton University</span>
+            <div className="flex items-center justify-center gap-2 text-gray-600 mb-6 bg-white/60 backdrop-blur-sm px-4 py-2 rounded-full inline-flex shadow-sm">
+              <MapPin className="h-4 w-4 text-rose-500" />
+              <span className="text-sm sm:text-base">Located in Nakuru, near Egerton University</span>
             </div>
 
             <Button
               asChild
               size="lg"
-              className="bg-gradient-to-r from-green-500 to-green-600 hover:from-green-600 hover:to-green-700 text-white px-6 sm:px-8 py-3 sm:py-4 text-responsive-base sm:text-responsive-lg shadow-xl transition-all duration-200 transform hover:scale-105 font-bold"
+              className="bg-gradient-to-r from-green-500 to-green-600 hover:from-green-600 hover:to-green-700 text-white px-8 py-4 text-lg shadow-xl transition-all duration-200 transform hover:scale-105 font-bold"
             >
               <Link href="#products">
-                <ShoppingBag className="w-4 h-4 sm:w-5 sm:h-5 mr-2" />
+                <ShoppingBag className="w-5 h-5 mr-2" />
                 Shop Collection
               </Link>
             </Button>
@@ -690,24 +492,20 @@ Is this bag still available? I would like to know more details about it.`
 
       {/* Featured Products Preview */}
       {availableProducts.length > 0 && (
-        <section className="py-6 sm:py-8 lg:py-12 xl:py-16 bg-white/60 backdrop-blur-sm">
-          <div className="container mx-auto px-3 sm:px-4 lg:px-6">
-            <div className="text-center mb-6 sm:mb-8 lg:mb-12">
-              <h3 className="text-responsive-xl sm:text-responsive-2xl lg:text-responsive-3xl font-bold text-gray-900 mb-3 sm:mb-4">Featured Collection</h3>
-              <p className="text-gray-600 max-w-2xl mx-auto leading-relaxed text-responsive-base sm:text-responsive-lg">
+        <section className="py-8 sm:py-12 lg:py-16 bg-white/60 backdrop-blur-sm">
+          <div className="container mx-auto px-4">
+            <div className="text-center mb-8 sm:mb-12">
+              <h3 className="text-2xl sm:text-3xl font-bold text-gray-900 mb-4">Featured Collection</h3>
+              <p className="text-gray-600 max-w-2xl mx-auto leading-relaxed">
                 A glimpse of our most popular bags, crafted with attention to detail and designed for the modern
                 lifestyle.
               </p>
             </div>
-            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-2 sm:gap-3 lg:gap-4 xl:gap-6 max-w-7xl mx-auto">
-              {availableProducts.slice(0, 12).map((product, index) => (
+            <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-3 sm:gap-6 max-w-7xl mx-auto">
+              {availableProducts.slice(0, 10).map((product) => (
                 <Card
                   key={product.id}
-                  className={`group hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-2 border-0 bg-white/80 backdrop-blur-sm overflow-hidden glow-effect ${
-                    index % 4 === 0 ? 'floating-island' : 
-                    index % 4 === 1 ? 'floating-island-delay-1' : 
-                    index % 4 === 2 ? 'floating-island-delay-2' : 'floating-island-delay-3'
-                  }`}
+                  className="group hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-2 border-0 bg-white/80 backdrop-blur-sm overflow-hidden"
                 >
                   <CardContent className="p-0">
                     <div className="aspect-square overflow-hidden bg-gray-100 relative">
@@ -719,23 +517,23 @@ Is this bag still available? I would like to know more details about it.`
                         className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
                       />
                       <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
-                      <Badge className="absolute top-1 sm:top-2 right-1 sm:right-2 bg-green-500 text-white shadow-lg text-responsive-xs">
+                      <Badge className="absolute top-2 right-2 bg-green-500 text-white shadow-lg text-xs">
                         Available
                       </Badge>
-                      <Badge className="absolute top-1 sm:top-2 left-1 sm:left-2 bg-blue-500 text-white shadow-lg text-responsive-xs">
+                      <Badge className="absolute top-2 left-2 bg-blue-500 text-white shadow-lg text-xs">
                         ID: {product.id}
                       </Badge>
                     </div>
-                    <div className="p-2 sm:p-3 lg:p-4 text-center">
-                      <h4 className="font-bold text-gray-900 mb-1 text-responsive-xs sm:text-responsive-sm lg:text-responsive-base line-clamp-1">
+                    <div className="p-2 sm:p-4 text-center">
+                      <h4 className="font-bold text-gray-900 mb-1 text-xs sm:text-sm lg:text-base line-clamp-1">
                         {product.name}
                       </h4>
-                      <p className="text-responsive-xs text-gray-600 mb-1 font-medium">{product.category}</p>
-                      <p className="font-bold text-rose-600 mb-2 sm:mb-3 text-responsive-sm sm:text-responsive-base lg:text-responsive-lg">{product.price}</p>
+                      <p className="text-xs text-gray-600 mb-1 font-medium">{product.category}</p>
+                      <p className="font-bold text-rose-600 mb-2 sm:mb-3 text-sm sm:text-lg">{product.price}</p>
                       <Button
                         asChild
                         size="sm"
-                        className="w-full bg-gradient-to-r from-green-500 to-green-600 hover:from-green-600 hover:to-green-700 text-white shadow-lg transition-all duration-200 transform hover:scale-105 text-responsive-xs sm:text-responsive-sm font-bold"
+                        className="w-full bg-gradient-to-r from-green-500 to-green-600 hover:from-green-600 hover:to-green-700 text-white shadow-lg transition-all duration-200 transform hover:scale-105 text-xs sm:text-sm font-bold"
                       >
                         <Link
                           href={createWhatsappUrl(product.name, product.id, product.price)}
@@ -757,44 +555,44 @@ Is this bag still available? I would like to know more details about it.`
       )}
 
       {/* Full Product Collection */}
-      <section id="products" className="py-6 sm:py-8 lg:py-12 xl:py-16">
-        <div className="container mx-auto px-3 sm:px-4 lg:px-6">
-          <div className="text-center mb-6 sm:mb-8 lg:mb-12">
-            <h3 className="text-responsive-xl sm:text-responsive-2xl lg:text-responsive-3xl font-bold text-gray-900 mb-3 sm:mb-4">Complete Collection</h3>
-            <p className="text-gray-600 max-w-2xl mx-auto leading-relaxed text-responsive-base sm:text-responsive-lg">
+      <section id="products" className="py-8 sm:py-12 lg:py-16">
+        <div className="container mx-auto px-4">
+          <div className="text-center mb-8 sm:mb-12">
+            <h3 className="text-2xl sm:text-3xl font-bold text-gray-900 mb-4">Complete Collection</h3>
+            <p className="text-gray-600 max-w-2xl mx-auto leading-relaxed">
               Browse our entire range of beautiful bags. Each piece is carefully selected to ensure quality and style.
             </p>
           </div>
 
           {availableProducts.length === 0 ? (
             <Card className="bg-white/80 backdrop-blur-sm shadow-2xl border-0 max-w-2xl mx-auto">
-              <CardContent className="text-center py-8 sm:py-12 lg:py-16">
-                <div className="w-16 h-16 sm:w-20 sm:h-20 lg:w-24 lg:h-24 bg-gradient-to-br from-rose-100 to-pink-100 rounded-full flex items-center justify-center mx-auto mb-4 sm:mb-6 shadow-lg floating-island">
-                  <Heart className="w-8 h-8 sm:w-10 sm:h-10 lg:w-12 lg:h-12 text-rose-500" />
+              <CardContent className="text-center py-12 sm:py-16">
+                <div className="w-20 h-20 sm:w-24 sm:h-24 bg-gradient-to-br from-rose-100 to-pink-100 rounded-full flex items-center justify-center mx-auto mb-6 shadow-lg">
+                  <Heart className="w-10 h-10 sm:w-12 sm:h-12 text-rose-500" />
                 </div>
-                <h3 className="text-responsive-lg sm:text-responsive-xl lg:text-responsive-2xl font-bold text-gray-900 mb-3">New Collection Coming Soon!</h3>
-                <p className="text-gray-600 mb-4 sm:mb-6 lg:mb-8 text-responsive-base sm:text-responsive-lg leading-relaxed">
+                <h3 className="text-xl sm:text-2xl font-bold text-gray-900 mb-3">New Collection Coming Soon!</h3>
+                <p className="text-gray-600 mb-6 sm:mb-8 text-base sm:text-lg leading-relaxed">
                   We're updating our inventory with beautiful new bags. Check back soon or contact us directly for the
                   latest arrivals!
                 </p>
-                <div className="space-y-3 sm:space-y-4">
+                <div className="space-y-4">
                   <Button
                     asChild
                     size="lg"
                     className="bg-gradient-to-r from-green-500 to-green-600 hover:from-green-600 hover:to-green-700 text-white shadow-xl transition-all duration-200 transform hover:scale-105 font-bold"
                   >
                     <Link href={createWhatsappUrl()} target="_blank" rel="noopener noreferrer">
-                      <MessageCircle className="w-4 h-4 sm:w-5 sm:h-5 mr-2" />
+                      <MessageCircle className="w-5 h-5 mr-2" />
                       Contact Us for Updates
                     </Link>
                   </Button>
-                  <div className="flex flex-col sm:flex-row items-center justify-center gap-2 sm:gap-4 text-responsive-xs sm:text-responsive-sm text-gray-500">
+                  <div className="flex flex-col sm:flex-row items-center justify-center gap-2 sm:gap-4 text-sm text-gray-500">
                     <div className="flex items-center gap-1">
-                      <Phone className="h-3 w-3 sm:h-4 sm:w-4" />
+                      <Phone className="h-4 w-4" />
                       <span>{whatsappNumbers[0]}</span>
                     </div>
                     <div className="flex items-center gap-1">
-                      <Phone className="h-3 w-3 sm:h-4 sm:w-4" />
+                      <Phone className="h-4 w-4" />
                       <span>{whatsappNumbers[1]}</span>
                     </div>
                   </div>
@@ -802,15 +600,11 @@ Is this bag still available? I would like to know more details about it.`
               </CardContent>
             </Card>
           ) : (
-            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 2xl:grid-cols-7 gap-2 sm:gap-3 lg:gap-4 xl:gap-6">
-              {availableProducts.map((product, index) => (
+            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-3 sm:gap-4 lg:gap-6">
+              {availableProducts.map((product) => (
                 <Card
                   key={product.id}
-                  className={`group hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1 border-0 bg-white/80 backdrop-blur-sm overflow-hidden glow-effect ${
-                    index % 4 === 0 ? 'floating-island' : 
-                    index % 4 === 1 ? 'floating-island-delay-1' : 
-                    index % 4 === 2 ? 'floating-island-delay-2' : 'floating-island-delay-3'
-                  }`}
+                  className="group hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1 border-0 bg-white/80 backdrop-blur-sm overflow-hidden"
                 >
                   <CardContent className="p-0">
                     <div className="aspect-square overflow-hidden bg-gray-100 relative">
@@ -822,21 +616,21 @@ Is this bag still available? I would like to know more details about it.`
                         className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
                       />
                       <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
-                      <Badge className="absolute top-1 right-1 bg-green-500 text-white text-responsive-xs shadow-lg">
+                      <Badge className="absolute top-1.5 right-1.5 bg-green-500 text-white text-xs shadow-lg">
                         Available
                       </Badge>
-                      <Badge className="absolute top-1 left-1 bg-blue-500 text-white text-responsive-xs shadow-lg">
+                      <Badge className="absolute top-1.5 left-1.5 bg-blue-500 text-white text-xs shadow-lg">
                         ID: {product.id}
                       </Badge>
                     </div>
                     <div className="p-2 sm:p-3 text-center">
-                      <h4 className="font-bold text-gray-900 mb-1 text-responsive-xs sm:text-responsive-sm line-clamp-1">{product.name}</h4>
-                      <p className="text-responsive-xs text-gray-600 mb-1 font-medium">{product.category}</p>
-                      <p className="font-bold text-rose-600 mb-2 text-responsive-sm sm:text-responsive-base">{product.price}</p>
+                      <h4 className="font-bold text-gray-900 mb-1 text-xs sm:text-sm line-clamp-1">{product.name}</h4>
+                      <p className="text-xs text-gray-600 mb-1 font-medium">{product.category}</p>
+                      <p className="font-bold text-rose-600 mb-2 text-sm sm:text-base">{product.price}</p>
                       <Button
                         asChild
                         size="sm"
-                        className="w-full bg-gradient-to-r from-green-500 to-green-600 hover:from-green-600 hover:to-green-700 text-white text-responsive-xs shadow-lg transition-all duration-200 transform hover:scale-105 font-bold py-1.5 sm:py-2"
+                        className="w-full bg-gradient-to-r from-green-500 to-green-600 hover:from-green-600 hover:to-green-700 text-white text-xs shadow-lg transition-all duration-200 transform hover:scale-105 font-bold py-1.5 sm:py-2"
                       >
                         <Link
                           href={createWhatsappUrl(product.name, product.id, product.price)}
@@ -858,43 +652,43 @@ Is this bag still available? I would like to know more details about it.`
       </section>
 
       {/* Why Choose Us */}
-      <section className="py-6 sm:py-8 lg:py-12 xl:py-16 bg-white/60 backdrop-blur-sm">
-        <div className="container mx-auto px-3 sm:px-4 lg:px-6">
-          <div className="text-center mb-6 sm:mb-8 lg:mb-12">
-            <h3 className="text-responsive-xl sm:text-responsive-2xl lg:text-responsive-3xl font-bold text-gray-900 mb-3 sm:mb-4">Why Choose Our Boutique?</h3>
+      <section className="py-8 sm:py-12 lg:py-16 bg-white/60 backdrop-blur-sm">
+        <div className="container mx-auto px-4">
+          <div className="text-center mb-8 sm:mb-12">
+            <h3 className="text-2xl sm:text-3xl font-bold text-gray-900 mb-4">Why Choose Our Boutique?</h3>
           </div>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4 sm:gap-6 lg:gap-8 max-w-4xl mx-auto">
-            <Card className="text-center border-0 bg-white/80 backdrop-blur-sm shadow-xl hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-1 floating-island">
-              <CardContent className="p-4 sm:p-6 lg:p-8">
-                <div className="w-10 h-10 sm:w-12 sm:h-12 lg:w-16 lg:h-16 bg-gradient-to-br from-rose-500 to-pink-600 rounded-2xl flex items-center justify-center mx-auto mb-3 sm:mb-4 lg:mb-6 shadow-lg">
-                  <Heart className="w-5 h-5 sm:w-6 sm:h-6 lg:w-8 lg:h-8 text-white" />
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 sm:gap-8 max-w-4xl mx-auto">
+            <Card className="text-center border-0 bg-white/80 backdrop-blur-sm shadow-xl hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-1">
+              <CardContent className="p-6 sm:p-8">
+                <div className="w-12 h-12 sm:w-16 sm:h-16 bg-gradient-to-br from-rose-500 to-pink-600 rounded-2xl flex items-center justify-center mx-auto mb-4 sm:mb-6 shadow-lg">
+                  <Heart className="w-6 h-6 sm:w-8 sm:h-8 text-white" />
                 </div>
-                <h4 className="text-responsive-base sm:text-responsive-lg lg:text-responsive-xl font-bold text-gray-900 mb-2 sm:mb-3">Curated Selection</h4>
-                <p className="text-gray-600 leading-relaxed text-responsive-sm sm:text-responsive-base">
+                <h4 className="text-lg sm:text-xl font-bold text-gray-900 mb-2 sm:mb-3">Curated Selection</h4>
+                <p className="text-gray-600 leading-relaxed text-sm sm:text-base">
                   Each bag is carefully selected for quality, style, and functionality to meet your needs.
                 </p>
               </CardContent>
             </Card>
 
-            <Card className="text-center border-0 bg-white/80 backdrop-blur-sm shadow-xl hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-1 floating-island-delay-1">
-              <CardContent className="p-4 sm:p-6 lg:p-8">
-                <div className="w-10 h-10 sm:w-12 sm:h-12 lg:w-16 lg:h-16 bg-gradient-to-br from-purple-500 to-indigo-600 rounded-2xl flex items-center justify-center mx-auto mb-3 sm:mb-4 lg:mb-6 shadow-lg">
-                  <Star className="w-5 h-5 sm:w-6 sm:h-6 lg:w-8 lg:h-8 text-white" />
+            <Card className="text-center border-0 bg-white/80 backdrop-blur-sm shadow-xl hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-1">
+              <CardContent className="p-6 sm:p-8">
+                <div className="w-12 h-12 sm:w-16 sm:h-16 bg-gradient-to-br from-purple-500 to-indigo-600 rounded-2xl flex items-center justify-center mx-auto mb-4 sm:mb-6 shadow-lg">
+                  <Star className="w-6 h-6 sm:w-8 sm:h-8 text-white" />
                 </div>
-                <h4 className="text-responsive-base sm:text-responsive-lg lg:text-responsive-xl font-bold text-gray-900 mb-2 sm:mb-3">Premium Quality</h4>
-                <p className="text-gray-600 leading-relaxed text-responsive-sm sm:text-responsive-base">
+                <h4 className="text-lg sm:text-xl font-bold text-gray-900 mb-2 sm:mb-3">Premium Quality</h4>
+                <p className="text-gray-600 leading-relaxed text-sm sm:text-base">
                   We ensure every bag meets our high standards for durability, design, and craftsmanship.
                 </p>
               </CardContent>
             </Card>
 
-            <Card className="text-center border-0 bg-white/80 backdrop-blur-sm shadow-xl hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-1 floating-island-delay-2">
-              <CardContent className="p-4 sm:p-6 lg:p-8">
-                <div className="w-10 h-10 sm:w-12 sm:h-12 lg:w-16 lg:h-16 bg-gradient-to-br from-green-500 to-emerald-600 rounded-2xl flex items-center justify-center mx-auto mb-3 sm:mb-4 lg:mb-6 shadow-lg">
-                  <MessageCircle className="w-5 h-5 sm:w-6 sm:h-6 lg:w-8 lg:h-8 text-white" />
+            <Card className="text-center border-0 bg-white/80 backdrop-blur-sm shadow-xl hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-1">
+              <CardContent className="p-6 sm:p-8">
+                <div className="w-12 h-12 sm:w-16 sm:h-16 bg-gradient-to-br from-green-500 to-emerald-600 rounded-2xl flex items-center justify-center mx-auto mb-4 sm:mb-6 shadow-lg">
+                  <MessageCircle className="w-6 h-6 sm:w-8 sm:h-8 text-white" />
                 </div>
-                <h4 className="text-responsive-base sm:text-responsive-lg lg:text-responsive-xl font-bold text-gray-900 mb-2 sm:mb-3">Personal Service</h4>
-                <p className="text-gray-600 leading-relaxed text-responsive-sm sm:text-responsive-base">
+                <h4 className="text-lg sm:text-xl font-bold text-gray-900 mb-2 sm:mb-3">Personal Service</h4>
+                <p className="text-gray-600 leading-relaxed text-sm sm:text-base">
                   Direct communication with our team for personalized assistance and quick responses.
                 </p>
               </CardContent>
@@ -904,26 +698,26 @@ Is this bag still available? I would like to know more details about it.`
       </section>
 
       {/* Contact Section */}
-      <section className="py-6 sm:py-8 lg:py-12 xl:py-16 bg-gradient-to-r from-rose-600 to-pink-600 text-white relative overflow-hidden">
+      <section className="py-8 sm:py-12 lg:py-16 bg-gradient-to-r from-rose-600 to-pink-600 text-white relative overflow-hidden">
         <div className="absolute inset-0 bg-black/10"></div>
-        <div className="container mx-auto px-3 sm:px-4 lg:px-6 text-center relative">
-          <h3 className="text-responsive-xl sm:text-responsive-2xl lg:text-responsive-3xl font-bold mb-3 sm:mb-4">Ready to Find Your Perfect Bag?</h3>
-          <p className="text-rose-100 mb-3 sm:mb-4 max-w-2xl mx-auto text-responsive-base sm:text-responsive-lg leading-relaxed">
+        <div className="container mx-auto px-4 text-center relative">
+          <h3 className="text-2xl sm:text-3xl font-bold mb-4">Ready to Find Your Perfect Bag?</h3>
+          <p className="text-rose-100 mb-4 max-w-2xl mx-auto text-base sm:text-lg leading-relaxed">
             Contact us directly on WhatsApp to inquire about any of our beautiful bags. We're here to help you find the
             perfect match for your style and needs.
           </p>
-          <div className="flex items-center justify-center gap-2 text-rose-100 mb-4 sm:mb-6 lg:mb-8 bg-white/10 backdrop-blur-sm px-3 sm:px-4 py-2 rounded-full inline-flex">
-            <MapPin className="h-3 w-3 sm:h-4 sm:w-4" />
-            <span className="text-responsive-xs sm:text-responsive-sm">Visit us in Nakuru, near Egerton University</span>
+          <div className="flex items-center justify-center gap-2 text-rose-100 mb-6 sm:mb-8 bg-white/10 backdrop-blur-sm px-4 py-2 rounded-full inline-flex">
+            <MapPin className="h-4 w-4" />
+            <span className="text-sm sm:text-base">Visit us in Nakuru, near Egerton University</span>
           </div>
           <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center">
             <Button
               asChild
               size="lg"
-              className="bg-green-500 hover:bg-green-600 text-white px-4 sm:px-6 lg:px-8 py-3 sm:py-4 text-responsive-base sm:text-responsive-lg shadow-xl border-0 font-bold transition-all duration-200 transform hover:scale-105"
+              className="bg-green-500 hover:bg-green-600 text-white px-6 sm:px-8 py-3 sm:py-4 text-base sm:text-lg shadow-xl border-0 font-bold transition-all duration-200 transform hover:scale-105"
             >
               <Link href={createWhatsappUrl()} target="_blank" rel="noopener noreferrer">
-                <MessageCircle className="w-4 h-4 sm:w-5 sm:h-5 mr-2" />
+                <MessageCircle className="w-5 h-5 mr-2" />
                 WhatsApp: {whatsappNumbers[0]}
               </Link>
             </Button>
@@ -931,14 +725,14 @@ Is this bag still available? I would like to know more details about it.`
               asChild
               size="lg"
               variant="outline"
-              className="border-2 border-white text-white hover:bg-white hover:text-rose-600 px-4 sm:px-6 lg:px-8 py-3 sm:py-4 text-responsive-base sm:text-responsive-lg bg-transparent backdrop-blur-sm font-bold transition-all duration-200 transform hover:scale-105"
+              className="border-2 border-white text-white hover:bg-white hover:text-rose-600 px-6 sm:px-8 py-3 sm:py-4 text-base sm:text-lg bg-transparent backdrop-blur-sm font-bold transition-all duration-200 transform hover:scale-105"
             >
               <Link
                 href={`https://wa.me/${whatsappNumbers[1]}?text=${encodeURIComponent("Hi! I'm interested in your bags from The Bag Boutique located in Nakuru near Egerton University.")}`}
                 target="_blank"
                 rel="noopener noreferrer"
               >
-                <MessageCircle className="w-4 h-4 sm:w-5 sm:h-5 mr-2" />
+                <MessageCircle className="w-5 h-5 mr-2" />
                 WhatsApp: {whatsappNumbers[1]}
               </Link>
             </Button>
@@ -947,40 +741,40 @@ Is this bag still available? I would like to know more details about it.`
       </section>
 
       {/* Footer */}
-      <footer className="bg-gray-900 text-white py-6 sm:py-8 lg:py-12">
-        <div className="container mx-auto px-3 sm:px-4 lg:px-6">
+      <footer className="bg-gray-900 text-white py-8 sm:py-12">
+        <div className="container mx-auto px-4">
           <div className="text-center">
-            <div className="flex items-center justify-center space-x-2 sm:space-x-3 mb-4 sm:mb-6">
+            <div className="flex items-center justify-center space-x-3 mb-6">
               <div className="relative">
                 <Image
                   src="/logo.jpg"
                   alt="The Bag Boutique Logo"
-                  width={40}
-                  height={40}
-                  className="w-10 h-10 sm:w-12 sm:h-12 lg:w-[50px] lg:h-[50px] rounded-full shadow-lg ring-2 ring-gray-700 floating-island"
+                  width={50}
+                  height={50}
+                  className="rounded-full shadow-lg ring-2 ring-gray-700"
                 />
-                <div className="absolute -top-1 -right-1 w-2 h-2 sm:w-3 sm:h-3 lg:w-4 lg:h-4 bg-green-500 rounded-full border-2 border-gray-900"></div>
+                <div className="absolute -top-1 -right-1 w-4 h-4 bg-green-500 rounded-full border-2 border-gray-900"></div>
               </div>
               <div>
-                <h4 className="font-bold text-responsive-base sm:text-responsive-lg lg:text-responsive-xl bg-gradient-to-r from-rose-400 to-pink-400 bg-clip-text text-transparent">
+                <h4 className="font-bold text-lg sm:text-xl bg-gradient-to-r from-rose-400 to-pink-400 bg-clip-text text-transparent">
                   The Bag Boutique
                 </h4>
-                <p className="text-gray-400 text-responsive-xs sm:text-responsive-sm">Premium bags for every occasion</p>
+                <p className="text-gray-400 text-sm">Premium bags for every occasion</p>
               </div>
             </div>
 
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 sm:gap-3 lg:gap-4 text-responsive-xs sm:text-responsive-sm text-gray-400 mb-4 sm:mb-6 lg:mb-8 max-w-md mx-auto">
-              <div className="flex items-center justify-center gap-2 bg-gray-800 px-2 sm:px-3 lg:px-4 py-2 rounded-lg">
-                <MapPin className="h-3 w-3 sm:h-4 sm:w-4 text-rose-400" />
-                <span className="text-responsive-xs sm:text-responsive-sm">Nakuru, near Egerton University</span>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4 text-sm text-gray-400 mb-6 sm:mb-8 max-w-md mx-auto">
+              <div className="flex items-center justify-center gap-2 bg-gray-800 px-3 sm:px-4 py-2 rounded-lg">
+                <MapPin className="h-4 w-4 text-rose-400" />
+                <span className="text-xs sm:text-sm">Nakuru, near Egerton University</span>
               </div>
-              <div className="flex items-center justify-center gap-2 bg-gray-800 px-2 sm:px-3 lg:px-4 py-2 rounded-lg">
-                <Phone className="h-3 w-3 sm:h-4 sm:w-4 text-rose-400" />
-                <span className="text-responsive-xs sm:text-responsive-sm">{whatsappNumbers.join(" / ")}</span>
+              <div className="flex items-center justify-center gap-2 bg-gray-800 px-3 sm:px-4 py-2 rounded-lg">
+                <Phone className="h-4 w-4 text-rose-400" />
+                <span className="text-xs sm:text-sm">{whatsappNumbers.join(" / ")}</span>
               </div>
             </div>
 
-            <div className="flex flex-col sm:flex-row gap-2 sm:gap-3 justify-center">
+            <div className="flex flex-col sm:flex-row gap-3 justify-center">
               <Button
                 asChild
                 variant="outline"
@@ -988,7 +782,7 @@ Is this bag still available? I would like to know more details about it.`
                 className="border-green-400 text-green-400 hover:bg-green-400 hover:text-white bg-transparent shadow-lg font-bold transition-all duration-200 transform hover:scale-105"
               >
                 <Link href={createWhatsappUrl()} target="_blank" rel="noopener noreferrer">
-                  <MessageCircle className="w-3 h-3 sm:w-4 sm:h-4 mr-2" />
+                  <MessageCircle className="w-4 h-4 mr-2" />
                   {whatsappNumbers[0]}
                 </Link>
               </Button>
@@ -1003,13 +797,13 @@ Is this bag still available? I would like to know more details about it.`
                   target="_blank"
                   rel="noopener noreferrer"
                 >
-                  <MessageCircle className="w-3 h-3 sm:w-4 sm:h-4 mr-2" />
+                  <MessageCircle className="w-4 h-4 mr-2" />
                   {whatsappNumbers[1]}
                 </Link>
               </Button>
             </div>
 
-            <div className="mt-4 sm:mt-6 lg:mt-8 pt-4 sm:pt-6 lg:pt-8 border-t border-gray-800 text-center text-gray-500 text-responsive-xs sm:text-responsive-sm">
+            <div className="mt-6 sm:mt-8 pt-6 sm:pt-8 border-t border-gray-800 text-center text-gray-500 text-sm">
               <p>&copy; 2024 The Bag Boutique. All rights reserved.</p>
             </div>
           </div>

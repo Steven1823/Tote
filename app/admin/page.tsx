@@ -14,6 +14,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog"
 import { Alert, AlertDescription } from "@/components/ui/alert"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
+import Image from "next/image"
 import {
   Plus,
   Edit,
@@ -563,10 +564,13 @@ export default function AdminPage() {
                     className="bg-white shadow-lg border-0 overflow-hidden hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1"
                   >
                     <div className="aspect-square relative bg-gray-100 overflow-hidden">
-                      <img
+                      <Image
                         src={product.image || "/placeholder.svg"}
                         alt={product.name}
-                        className="w-full h-full object-cover"
+                        fill
+                        sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw"
+                        className="object-cover"
+                        unoptimized
                       />
                       <Badge className="absolute top-3 right-3 bg-green-500 text-white shadow-lg">Available</Badge>
                       <Badge className="absolute top-3 left-3 bg-blue-500 text-white shadow-lg">ID: {product.id}</Badge>
@@ -630,10 +634,13 @@ export default function AdminPage() {
                 {soldProducts.map((product) => (
                   <Card key={product.id} className="bg-white shadow-lg border-0 overflow-hidden opacity-75">
                     <div className="aspect-square relative bg-gray-100 overflow-hidden">
-                      <img
+                      <Image
                         src={product.image || "/placeholder.svg"}
                         alt={product.name}
-                        className="w-full h-full object-cover grayscale"
+                        fill
+                        sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw"
+                        className="object-cover grayscale"
+                        unoptimized
                       />
                       <Badge className="absolute top-3 right-3 bg-red-500 text-white shadow-lg">Sold</Badge>
                       <Badge className="absolute top-3 left-3 bg-gray-500 text-white shadow-lg">ID: {product.id}</Badge>

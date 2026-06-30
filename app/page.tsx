@@ -1,7 +1,6 @@
 "use client"
 
 import { useState, useEffect } from "react"
-import Image from "next/image"
 import Link from "next/link"
 import { MessageCircle, Heart, Star, MapPin, Phone, ShoppingBag, Sparkles, Play, Pause } from "lucide-react"
 import { Button } from "@/components/ui/button"
@@ -509,12 +508,11 @@ Is this bag still available? I would like to know more details about it.`
                 >
                   <CardContent className="p-0">
                     <div className="aspect-square overflow-hidden bg-gray-100 relative">
-                      <Image
+                      <img
                         src={product.image || "/placeholder.svg"}
                         alt={product.name}
-                        width={400}
-                        height={400}
                         className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
+                        loading="lazy"
                       />
                       <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
                       <Badge className="absolute top-2 right-2 bg-green-500 text-white shadow-lg text-xs">
@@ -608,12 +606,11 @@ Is this bag still available? I would like to know more details about it.`
                 >
                   <CardContent className="p-0">
                     <div className="aspect-square overflow-hidden bg-gray-100 relative">
-                      <Image
+                      <img
                         src={product.image || "/placeholder.svg"}
                         alt={product.name}
-                        width={300}
-                        height={300}
                         className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
+                        loading="lazy"
                       />
                       <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
                       <Badge className="absolute top-1.5 right-1.5 bg-green-500 text-white text-xs shadow-lg">

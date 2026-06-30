@@ -1,7 +1,5 @@
 import type { Config } from "tailwindcss";
 
-// all in fixtures is set to tailwind v3 as interims solutions
-
 const config: Config = {
     darkMode: ["class"],
     content: [
@@ -10,9 +8,17 @@ const config: Config = {
     "./app/**/*.{js,ts,jsx,tsx,mdx}",
     "*.{js,ts,jsx,tsx,mdx}"
   ],
+  future: {
+    hoverOnlyWhenSupported: true,
+  },
   theme: {
   	extend: {
   		colors: {
+  			lightBlue: 'var(--tw-colors-sky)',
+  			warmGray: 'var(--tw-colors-stone)',
+  			trueGray: 'var(--tw-colors-neutral)',
+  			coolGray: 'var(--tw-colors-gray)',
+  			blueGray: 'var(--tw-colors-slate)',
   			background: 'hsl(var(--background))',
   			foreground: 'hsl(var(--foreground))',
   			card: {

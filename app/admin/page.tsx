@@ -3,7 +3,6 @@
 import type React from "react"
 
 import { useState, useEffect } from "react"
-import Image from "next/image"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
@@ -405,12 +404,10 @@ export default function AdminPage() {
                   <div className="border-2 border-dashed border-gray-300 rounded-lg p-4 text-center hover:border-rose-400 transition-colors">
                     {imagePreview || newProduct.image ? (
                       <div className="relative">
-                        <Image
+                        <img
                           src={imagePreview || newProduct.image || "/placeholder.svg"}
                           alt="Preview"
-                          width={200}
-                          height={200}
-                          className="mx-auto rounded-lg object-cover"
+                          className="mx-auto rounded-lg object-cover w-48 h-48"
                         />
                         <Button
                           type="button"
@@ -565,12 +562,11 @@ export default function AdminPage() {
                     key={product.id}
                     className="bg-white shadow-lg border-0 overflow-hidden hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1"
                   >
-                    <div className="aspect-square relative bg-gray-100">
-                      <Image
+                    <div className="aspect-square relative bg-gray-100 overflow-hidden">
+                      <img
                         src={product.image || "/placeholder.svg"}
                         alt={product.name}
-                        fill
-                        className="object-cover"
+                        className="w-full h-full object-cover"
                       />
                       <Badge className="absolute top-3 right-3 bg-green-500 text-white shadow-lg">Available</Badge>
                       <Badge className="absolute top-3 left-3 bg-blue-500 text-white shadow-lg">ID: {product.id}</Badge>
@@ -633,12 +629,11 @@ export default function AdminPage() {
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 sm:gap-6">
                 {soldProducts.map((product) => (
                   <Card key={product.id} className="bg-white shadow-lg border-0 overflow-hidden opacity-75">
-                    <div className="aspect-square relative bg-gray-100">
-                      <Image
+                    <div className="aspect-square relative bg-gray-100 overflow-hidden">
+                      <img
                         src={product.image || "/placeholder.svg"}
                         alt={product.name}
-                        fill
-                        className="object-cover grayscale"
+                        className="w-full h-full object-cover grayscale"
                       />
                       <Badge className="absolute top-3 right-3 bg-red-500 text-white shadow-lg">Sold</Badge>
                       <Badge className="absolute top-3 left-3 bg-gray-500 text-white shadow-lg">ID: {product.id}</Badge>
@@ -690,12 +685,10 @@ export default function AdminPage() {
                   <div className="border-2 border-dashed border-gray-300 rounded-lg p-4 text-center hover:border-rose-400 transition-colors">
                     {editingProduct.image ? (
                       <div className="relative">
-                        <Image
+                        <img
                           src={editingProduct.image || "/placeholder.svg"}
                           alt="Preview"
-                          width={200}
-                          height={200}
-                          className="mx-auto rounded-lg object-cover"
+                          className="mx-auto rounded-lg object-cover w-48 h-48"
                         />
                         <Button
                           type="button"
